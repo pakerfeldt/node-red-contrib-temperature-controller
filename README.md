@@ -1,3 +1,12 @@
+# Temperature controller
+A universal thermostat with both cooling and heating capabilities for Node-RED. Hook up temperature readings as input and connect output to whatever controls your cooler and/or heater.
+
+![image](https://github.com/user-attachments/assets/393fe62c-05c6-4a53-9a21-6f0703625a80) ![image](https://github.com/user-attachments/assets/83f0c3d3-df86-44b6-a69a-7ce42db737cc)
+
+The following documentation can also be found under the help section of this node inside Node-RED.
+
+---
+
 A universal thermostat that can be used to alternately control a cooling unit and a heat source, for example, a refrigerator and a heating plate.
 
 ## Details
