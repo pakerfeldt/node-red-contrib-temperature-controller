@@ -1,6 +1,6 @@
 {
-  "name": "red-contrib-temperature-controller",
-  "version": "1.0.0",
+  "name": "@pakerfeldt/node-red-contrib-temperature-controller",
+  "version": "1.0.1",
   "description": "A universal thermostat for heating and cooling.",
   "main": "index.js",
   "scripts": {
@@ -12,6 +12,7 @@
     }
   },
   "keywords": [
+    "node-red",
     "temperature",
     "controller",
     "thermostat",
