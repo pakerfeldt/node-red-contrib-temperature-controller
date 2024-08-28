@@ -119,7 +119,7 @@
             }
         ]
     },
-    "flows": [
+    "flow": [
         {
             "id": "61a506b329d2f807",
             "type": "function",
