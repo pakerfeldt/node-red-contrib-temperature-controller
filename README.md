@@ -15,6 +15,8 @@ You should regularly send temperature measurements to this node's input, and it 
 ### Target temperature (°C)
 This is your wanted temperature.
 
+Decimals allowed.
+
 Default value is `18`°C but you really need to define this yourself.
 
 ### Temperature difference (°C)
@@ -22,6 +24,8 @@ Default value is `18`°C but you really need to define this yourself.
 * Heating is triggered when the temperature measurement is less than or equal to your target temperature - temperature difference.
 
 A lower value of the temperature difference means this thermostat reacts quicker but could also lead to more starts and stops.
+
+Decimals allowed.
 
 Default value is `2`°C.
 
@@ -55,6 +59,5 @@ Value must be a number. See documentation above for more details.
 
 ## Outputs
 This node has two outputs for controlling your cooler and heater. Both outputs emits a boolean to determine if your appliance should be turned on (`true`) or turned off (`false`).
-The first output represents the cooler, and the second output represents the heater. Messages are sent with topic `cooler-controller` and `heater-controller` respectively so you could merge
+The first output represents the cooler, and the second output represents the heater. Messages are sent with topic `cooling-controller` and `heating-controller` respectively so you could merge
 them in your flow and use topic to distinguish.
-
