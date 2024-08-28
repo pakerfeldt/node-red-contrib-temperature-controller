@@ -1,0 +1,23 @@
+{
+  "name": "red-contrib-temperature-controller",
+  "version": "1.0.0",
+  "description": "A universal thermostat for heating and cooling.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "node-red": {
+    "nodes": {
+      "tc-node": "index.js"
+    }
+  }
+  "keywords": [
+    "temperature",
+    "controller",
+    "thermostat",
+    "heating",
+    "cooling"
+  ],
+  "author": "Patrik Åkerfeldt",
+  "license": "MIT"
+}
