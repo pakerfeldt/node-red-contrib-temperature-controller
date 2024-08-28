@@ -10,7 +10,7 @@
     "nodes": {
       "tc-node": "index.js"
     }
-  }
+  },
   "keywords": [
     "temperature",
     "controller",
