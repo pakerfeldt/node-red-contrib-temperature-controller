@@ -176,7 +176,7 @@
             "type": "function",
             "z": "7b528c333c30c8a0",
             "name": "set cooling state",
-            "func": "if (msg.payload == true) {\n    flow.set(\"CURRENT_STATE\", 3)\n    let lastMeasurement = flow.get(\"LAST_MEASURED_TEMPERATURE\")\n    let targetTemperature = flow.get(\"TARGET_TEMPERATURE\")\n    return {\n        payload: {\n            text: lastMeasurement + \"°C (\" + targetTemperature + \") (cooling)\",\n            fill: \"blue\",\n            shape: \"ring\"\n        }\n    }\n}\n",
+            "func": "if (msg.payload == true) {\n    flow.set(\"CURRENT_STATE\", 3)\n    let lastMeasurement = flow.get(\"LAST_MEASURED_TEMPERATURE\")\n    let targetTemperature = flow.get(\"TARGET_TEMPERATURE\")\n    return {\n        payload: {\n            text: lastMeasurement + \"°C (\" + targetTemperature + \") (cooling)\",\n            fill: \"blue\",\n            shape: \"dot\"\n        }\n    }\n}\n",
             "outputs": 1,
             "timeout": 0,
             "noerr": 0,
