@@ -1,7 +1,7 @@
 A universal thermostat that can be used to alternately control a cooling unit and a heat source, for example, a refrigerator and a heating plate.
 
 ## Details
-Regularly send temperature measurements to this node, and it will instruct you on when to turn on/off your cooling and heating unit to reach the target temperature.
+You should regularly send temperature measurements to this node's input, and it will instruct you on when to turn on/off your cooling and heating unit to reach the target temperature.
 
 ### Target temperature (°C)
 This is your wanted temperature.
@@ -27,6 +27,8 @@ The node will show its current state throught the status object. It will tell yo
 It also shows the most recent measurement received as well as the target temperature.
 
 ## Inputs
+Please note that any override of properties does not automatically trigger a change in cooling/heating until next measurement is sent.
+
 ### payload
 Give temperature measurements in the payload as a number.
 
