@@ -1,5 +1,6 @@
 # Temperature controller
 A universal thermostat with both cooling and heating capabilities for Node-RED. Hook up temperature readings as input and connect output to whatever controls your cooler and/or heater.
+This node was built as a substitute for STC-1000, commonly used for controlling temperature in a fermenter cabinet. Combine this node with hardware, e.g. Shelly Plus 2PM and Shelly Plus Addon and you have a connected thermostat that you can monitor and control remotely.
 
 ![image](https://github.com/user-attachments/assets/393fe62c-05c6-4a53-9a21-6f0703625a80) ![image](https://github.com/user-attachments/assets/83f0c3d3-df86-44b6-a69a-7ce42db737cc)
 

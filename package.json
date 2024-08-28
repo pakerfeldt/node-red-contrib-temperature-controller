@@ -1,6 +1,6 @@
 {
   "name": "@pakerfeldt/node-red-contrib-temperature-controller",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A universal thermostat for heating and cooling.",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,8 @@
     "controller",
     "thermostat",
     "heating",
-    "cooling"
+    "cooling",
+    "stc1000"
   ],
   "author": "Patrik Åkerfeldt",
   "license": "MIT"
