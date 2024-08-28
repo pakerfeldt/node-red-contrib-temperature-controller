@@ -3,13 +3,20 @@
   "version": "1.0.3",
   "description": "A universal thermostat for heating and cooling.",
   "main": "index.js",
+  "engines": {
+    "node": ">=12.0.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "node-red": {
+    "version": ">=2.0.0",    
     "nodes": {
       "tc-node": "index.js"
     }
+  },
+  "bugs": {
+    "url": "https://github.com/pakerfeldt/node-red-contrib-temperature-controller/issues",
   },
   "keywords": [
     "node-red",
