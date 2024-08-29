@@ -46,17 +46,25 @@ Please note that any override of properties does not automatically trigger a cha
 ### payload
 Give temperature measurements in the payload as a number.
 
-### target
+### target (`number`)
 You may override the target temperature defined in the configuration of this node by passing in a new value in `msg.target`.
 Value must be a number. See documentation above for more details.
 
-### difference
+### difference (`number`)
 You may override the temperature difference defined in the configuration of this node by passing in a new value in `msg.difference`.
 Value must be a number. See documentation above for more details.
 
-### compressor
+### compressor (`number`)
 You may override the compressor delay defined in the configuration of this node by passing in a new value in `msg.compressor`. 
 Value must be a number. See documentation above for more details.
+
+### cooling (`boolean`)
+As an extra precaution, you can pass in the current state of the cooler in `msg.cooling`. If, for whatever reason, the cooler is in the wrong state, the temperature 
+controller will correct that for you. This is not strictly necessary but act as a safety net in case your connection to the cooler is unstable.
+
+### heating (`boolean`)
+As an extra precaution, you can pass in the current state of the heater in `msg.heating`. If, for whatever reason, the heater is in the wrong state, the temperature 
+controller will correct that for you. This is not strictly necessary but act as a safety net in case your connection to the heater is unstable.
 
 ## Outputs
 This node has two outputs for controlling your cooler and heater. Both outputs emits a boolean to determine if your appliance should be turned on (`true`) or turned off (`false`).
