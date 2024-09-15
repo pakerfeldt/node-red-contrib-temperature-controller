@@ -2,7 +2,7 @@
     "id": "7b528c333c30c8a0",
     "type": "subflow",
     "name": "temperature controller",
-    "info": "A universal thermostat that can be used to alternately control a cooling unit and a heat source, for example, a refrigerator and a heating plate.\n\n## Details\nYou should regularly send temperature measurements to this node's input, and it will instruct you on when to turn on/off your cooling and heating unit to reach the target temperature.\n\n### Target temperature (°C)\nThis is your wanted temperature.\n\nDecimals allowed.\n\nDefault value is `18`°C but you really need to define this yourself.\n\n### Temperature difference (°C)\n* Cooling is triggered when the temperature measurement is greater than or equal to your target temperature + temperature difference.\n* Heating is triggered when the temperature measurement is less than or equal to your target temperature - temperature difference.\n\nA lower value of the temperature difference means this thermostat reacts quicker but could also lead to more starts and stops.\n\nDecimals allowed.\n\nDefault value is `2`°C.\n\n### Compressor delay (minutes)\nThe node has built-in support for compressor protection. As soon as cooling is stopped, it will not allow cooling again until at least this delay has elapsed, to avoid damaging the compressor.\nYou can turn compressor protection of by setting this value to 0.\n\nDefault value is `3` minutes.\n\n### Status object\nThe node will show its current state throught the status object. It will tell you when the thermostat is idling, heating, cooling or in a compressor delay state.\nIt also shows the most recent measurement received as well as the target temperature.\n\n## Inputs\nPlease note that any override of properties does not automatically trigger a change in cooling/heating until next measurement is sent.\n\n### payload\nGive temperature measurements in the payload as a number.\n\n### target (`number`)\nYou may override the target temperature defined in the configuration of this node by passing in a new value in `msg.target`.\nValue must be a number. See documentation above for more details.\n\n### difference (`number`)\nYou may override the temperature difference defined in the configuration of this node by passing in a new value in `msg.difference`.\nValue must be a number. See documentation above for more details.\n\n### compressor (`number`)\nYou may override the compressor delay defined in the configuration of this node by passing in a new value in `msg.compressor`. \nValue must be a number. See documentation above for more details.\n\n### cooling (`boolean`)\nAs an extra precaution, you can pass in the current state of the cooler in `msg.cooling`. If, for whatever reason, the cooler is in the wrong state, the temperature \ncontroller will correct that for you. This is not strictly necessary but act as a safety net in case your connection to the cooler is unstable.\n\n### heating (`boolean`)\nAs an extra precaution, you can pass in the current state of the heater in `msg.heating`. If, for whatever reason, the heater is in the wrong state, the temperature \ncontroller will correct that for you. This is not strictly necessary but act as a safety net in case your connection to the heater is unstable.\n\n## Outputs\nThis node has two outputs for controlling your cooler and heater. Both outputs emits a boolean to determine if your appliance should be turned on (`true`) or turned off (`false`).\nThe first output represents the cooler, and the second output represents the heater. Messages are sent with topic `cooling-controller` and `heating-controller` respectively so you could merge\nthem in your flow and use topic to distinguish.\n",
+    "info": "A universal thermostat that can be used to alternately control a cooling unit and a heat source, for example, a refrigerator and a heating plate.\n\n## Details\nYou should regularly send temperature measurements to this node's input, and it will instruct you on when to turn on/off your cooling and heating unit to reach the target temperature.\n\n### Target temperature (°C)\nThis is your wanted temperature.\n\nDecimals allowed.\n\nDefault value is `18`°C but you really need to define this yourself.\n\n### Temperature difference (°C)\n* Cooling is triggered when the temperature measurement is greater than or equal to your target temperature + temperature difference.\n* Heating is triggered when the temperature measurement is less than or equal to your target temperature - temperature difference.\n\nA lower value of the temperature difference means this thermostat reacts quicker but could also lead to more starts and stops.\n\nDecimals allowed.\n\nDefault value is `2`°C.\n\n### Compressor delay (minutes)\nThe node has built-in support for compressor protection. As soon as cooling is stopped, it will not allow cooling again until at least this delay has elapsed, to avoid damaging the compressor.\nYou can turn compressor protection of by setting this value to 0.\n\nDefault value is `3` minutes.\n\n### Status object\nThe node will show its current state throught the status object. It will tell you when the thermostat is idling, heating, cooling or in a compressor delay state.\nIt also shows the most recent measurement received as well as the target temperature.\n\n## Inputs\nPlease note that any override of properties does not automatically trigger a change in cooling/heating until next measurement is sent.\n\n### payload (`number`)\nGive temperature measurements in the payload as a number.\n\n### target (`number`)\nYou may override the target temperature defined in the configuration of this node by passing in a new value in `msg.target`.\nValue must be a number. See documentation above for more details.\n\n### difference (`number`)\nYou may override the temperature difference defined in the configuration of this node by passing in a new value in `msg.difference`.\nValue must be a number. See documentation above for more details.\n\n### compressor (`number`)\nYou may override the compressor delay defined in the configuration of this node by passing in a new value in `msg.compressor`. \nValue must be a number. See documentation above for more details.\n\n### cooling (`boolean`)\nAs an extra precaution, you can pass in the current state of the cooler in `msg.cooling`. If, for whatever reason, the cooler is in the wrong state, the temperature \ncontroller will correct that for you. This is not strictly necessary but act as a safety net in case your connection to the cooler is unstable.\n\n### heating (`boolean`)\nAs an extra precaution, you can pass in the current state of the heater in `msg.heating`. If, for whatever reason, the heater is in the wrong state, the temperature \ncontroller will correct that for you. This is not strictly necessary but act as a safety net in case your connection to the heater is unstable.\n\n## Outputs\nThis node has two outputs for controlling your cooler and heater. Both outputs emits a boolean to determine if your appliance should be turned on (`true`) or turned off (`false`).\nThe first output represents the cooler, and the second output represents the heater. Messages are sent with topic `cooling-controller` and `heating-controller` respectively so you could merge\nthem in your flow and use topic to distinguish.\n",
     "category": "smart home",
     "in": [
         {
@@ -93,7 +93,7 @@
     "meta": {
         "module": "Temperature Controller",
         "type": "smart home",
-        "version": "1.0.6",
+        "version": "1.0.7",
         "author": "Patrik Åkerfeldt <patrik.akerfeldt@gmail.com>",
         "desc": "A universal thermostat for heating and cooling.",
         "keywords": "temperature, controller, thermostat, heating, cooling",
@@ -119,93 +119,92 @@
             }
         ]
     },
-    "flow": [
-        {
-            "id": "61a506b329d2f807",
-            "type": "function",
-            "z": "7b528c333c30c8a0",
-            "name": "handle incoming message",
-            "func": "const STATE_UNKNOWN = 0\nconst STATE_IDLE = 1\nconst STATE_COMPRESSOR_DELAY = 2\nconst STATE_COOLING = 3\nconst STATE_HEATING = 4\n\nconst TARGET = \"TARGET_TEMPERATURE\"\nconst DIFFERENCE = \"TEMPERATURE_DIFFERENCE\"\nconst COMPRESSOR = \"COMPRESSOR_DELAY_MINUTES\"\n\nlet compressorMsg = setOverrides(msg)\n\nlet targetTemperature = readVariable(TARGET)\nlet differenceSetValue = readVariable(DIFFERENCE)\nlet compressorDelayTimeMinutes = readVariable(COMPRESSOR)\nlet previousState = flow.get(\"CURRENT_STATE\") || STATE_UNKNOWN\nlet currentCompressorDelay = Math.max(0, ((flow.get(\"COMPRESSOR_STOPPED\") || 0) + compressorDelayTimeMinutes*60000) - new Date().getTime())\nlet lastMeasurement = flow.get(\"LAST_MEASURED_TEMPERATURE\")\n\nlet measuredTemperature = msg.payload\nlet hasNewMeasurement = typeof measuredTemperature == \"number\"\n\nif (hasNewMeasurement) {\n    lastMeasurement = measuredTemperature\n} else if (lastMeasurement == null) {\n    lastMeasurement = \"?\"\n}\n\nlet coolingMsg = null\nlet heatingMsg = null\nlet statusMsg = null\n\nif (msg.context != null) {\n    flow.keys().forEach( it => \n        node.warn(it + \" = \" + flow.get(it))\n    )\n}\n\nif (targetTemperature == -99999) {\n    return [compressorMsg, null, null, error(\"Target temperature not set\")]\n}\n\n\nflow.set(\"LAST_MEASURED_TEMPERATURE\", lastMeasurement)\n\nlet newState = STATE_UNKNOWN\n\nif (hasNewMeasurement) {\n    if (measuredTemperature >= targetTemperature + differenceSetValue) {\n        newState = (previousState == STATE_COOLING) ? STATE_COOLING : STATE_COMPRESSOR_DELAY\n    } else if (measuredTemperature <= targetTemperature - differenceSetValue) {\n        newState = STATE_HEATING\n    } else {\n        if ((previousState == STATE_COOLING || previousState == STATE_COMPRESSOR_DELAY) && measuredTemperature > targetTemperature) {\n            newState = previousState\n        } else if (previousState == STATE_HEATING && measuredTemperature < targetTemperature) {\n            newState = previousState\n        } else {\n            newState = STATE_IDLE\n        }\n    }\n}\nif (newState == STATE_UNKNOWN && coolingMsg == null && msg.cooling != null && previousState != STATE_COMPRESSOR_DELAY && msg.cooling != isCooling(previousState)) {\n    if (!msg.cooling) {\n        // Cooling should be turned off\n        newState = STATE_COMPRESSOR_DELAY\n        // We don't have a reliable compressor delay time so we need to default to full delay\n        currentCompressorDelay = compressorDelayTimeMinutes * 60000\n    } else {\n        // Cooling should be turned off\n        coolingMsg = [{ reset: true}, { payload: false, delay: 0, topic: \"cooling-controller\" }]\n    }\n}\n\nif (newState == STATE_UNKNOWN && heatingMsg == null && msg.heating != null && msg.heating != (previousState == STATE_HEATING)) {\n    if (!msg.heating) {\n        // Heating should be turned on\n        newState = STATE_HEATING\n        heatingMsg = { payload: true, topic: \"heating-controller\" }\n    } else {\n        // Heating should be turned off\n        heatingMsg = { payload: false, topic: \"heating-controller\" }\n    }    \n}\n\nif (newState != STATE_UNKNOWN && newState != previousState) {\n    if (previousState == STATE_COOLING || previousState == STATE_COMPRESSOR_DELAY) {\n        coolingMsg = [{ reset: true}, { payload: false, delay: 0, topic: \"cooling-controller\" }]\n        if (previousState == STATE_COOLING) {\n            flow.set(\"COMPRESSOR_STOPPED\", new Date().getTime())\n        }\n    } else if (previousState == STATE_HEATING) {\n        heatingMsg = { payload: false, topic: \"heating-controller\" }\n    }\n    if (newState == STATE_COMPRESSOR_DELAY) {\n        coolingMsg = [{ reset: true}, { payload: true, delay: currentCompressorDelay, topic: \"cooling-controller\" }]\n    } else if (newState == STATE_HEATING) {\n        heatingMsg = { payload: true, topic: \"heating-controller\"}\n    }\n}\n\nlet now = new Date()\nlet compressorDelayDate = new Date(new Date().getTime() + currentCompressorDelay)\nlet reportedMeasurement = measuredTemperature != null ? measuredTemperature : lastMeasurement\nlet reportedState = newState != STATE_UNKNOWN ? newState : previousState\nstatusMsg = status(\n    reportedMeasurement + \"°C (\" + targetTemperature + \")\" + stateToText(reportedState, compressorDelayDate.getTime() > now.getTime() ? compressorDelayDate : now),\n    stateToColor(reportedState),\n    stateToShape(reportedState)\n)\n\nflow.set(\"CURRENT_STATE\", reportedState)\n\nreturn [\n    compressorMsg,\n    coolingMsg,\n    heatingMsg,\n    statusMsg\n]\n\nfunction isCooling(newState) {\n    return newState == STATE_COOLING || newState == STATE_COMPRESSOR_DELAY\n}\n\nfunction error(text) {\n    return status(text, \"red\", \"dot\")\n}\n\nfunction status(text, fill, shape) {\n    return {\n        payload: { text, fill: fill, shape: shape }\n    }\n}\n\nfunction stateToText(state, compressorDelay) {\n    switch (state) {\n        case STATE_IDLE: return \" (idle)\"\n        case STATE_COMPRESSOR_DELAY: {\n            let delay = compressorDelay.toLocaleTimeString([], {\n                    hour: '2-digit',\n                    minute: '2-digit',\n                    second: '2-digit',\n                    hour12: false\n            });\n            return ` (compressor delay ${delay})`\n        }\n        case STATE_COOLING: return \" (cooling)\"\n        case STATE_HEATING: return \" (heating)\"\n        default: return \"\"\n    }\n}\n\nfunction stateToColor(state) {\n    switch (state) {\n        case STATE_IDLE: return \"grey\"\n        case STATE_COMPRESSOR_DELAY: case STATE_COOLING: return \"blue\"\n        case STATE_HEATING: return \"green\"\n        default: return \"grey\"\n    }\n}\n\nfunction stateToShape(state) {\n    switch (state) {\n        case STATE_COMPRESSOR_DELAY: return \"ring\"\n        default: return \"dot\"\n    }\n}\n\nfunction setOverrides(msg) {\n    let compressorMsg = null\n    if (msg.target != null) {\n        if (typeof msg.target == \"number\") {\n            flow.set(TARGET, msg.target)\n        } else {\n            node.warn(\"msg.target is not a number: \" + msg.target)\n        }     \n    }\n\n    if (msg.difference != null) {\n        if (typeof msg.difference == \"number\") {\n            flow.set(DIFFERENCE, msg.difference)\n        } else {\n            node.warn(\"msg.difference is not a number: \" + msg.difference)\n        }\n    }\n\n    if (msg.compressor != null) {\n        if (typeof msg.compressor == \"number\") {\n            let previousCompressorDelay = readVariable(COMPRESSOR)\n            flow.set(COMPRESSOR, msg.compressor)\n            if (previousCompressorDelay != msg.compressor) {\n                compressorMsg = { flush: true }\n            }\n        } else {\n            node.warn(\"msg.compressor is not a number: \" + msg.compressor)\n        }\n    }\n    return compressorMsg\n}\n\nfunction readVariable(name) {\n    let value = flow.get(name)\n    if (value == null) {\n        return env.get(name)\n    }\n    return value\n}\n\nfunction stateToStr(state) {\n    switch (state) {\n        case STATE_UNKNOWN: return \"UNKNOWN\"\n        case STATE_COMPRESSOR_DELAY: return \"COMPRESSOR_DELAY\"\n        case STATE_COOLING: return \"COOLING\"\n        case STATE_HEATING: return \"HEATING\"\n        case STATE_IDLE: return \"IDLE\"\n        default: return \"<???>\"\n    }\n}",
-            "outputs": 4,
-            "timeout": 0,
-            "noerr": 0,
-            "initialize": "",
-            "finalize": "",
-            "libs": [],
-            "x": 280,
-            "y": 120,
-            "wires": [
-                [
-                    "842ef249df079949"
-                ],
-                [
-                    "842ef249df079949"
-                ],
-                [],
-                []
+    "flow": {
+        "id": "61a506b329d2f807",
+        "type": "function",
+        "z": "7b528c333c30c8a0",
+        "name": "handle incoming message",
+        "func": "const STATE_UNKNOWN = 0\nconst STATE_IDLE = 1\nconst STATE_COMPRESSOR_DELAY = 2\nconst STATE_COOLING = 3\nconst STATE_HEATING = 4\n\nconst TARGET = \"TARGET_TEMPERATURE\"\nconst DIFFERENCE = \"TEMPERATURE_DIFFERENCE\"\nconst COMPRESSOR = \"COMPRESSOR_DELAY_MINUTES\"\n\nlet compressorMsg = setOverrides(msg)\n\nlet targetTemperature = readVariable(TARGET)\nlet differenceSetValue = readVariable(DIFFERENCE)\nlet compressorDelayTimeMinutes = readVariable(COMPRESSOR)\nlet previousState = flow.get(\"CURRENT_STATE\") || STATE_UNKNOWN\nlet currentCompressorDelay = Math.max(0, ((flow.get(\"COMPRESSOR_STOPPED\") || 0) + compressorDelayTimeMinutes*60000) - new Date().getTime())\nlet lastMeasurement = flow.get(\"LAST_MEASURED_TEMPERATURE\")\n\nlet measuredTemperature = msg.payload\nlet hasNewMeasurement = typeof measuredTemperature == \"number\"\n\nif (hasNewMeasurement) {\n    lastMeasurement = measuredTemperature\n} else if (lastMeasurement == null) {\n    lastMeasurement = \"?\"\n}\n\nlet coolingMsg = null\nlet heatingMsg = null\nlet statusMsg = null\n\nif (msg.context != null) {\n    flow.keys().forEach( it => \n        node.warn(it + \" = \" + flow.get(it))\n    )\n}\n\nif (targetTemperature == -99999) {\n    return [compressorMsg, null, null, error(\"Target temperature not set\")]\n}\n\n\nflow.set(\"LAST_MEASURED_TEMPERATURE\", lastMeasurement)\n\nlet newState = STATE_UNKNOWN\nif (hasNewMeasurement) {\n    if (measuredTemperature >= targetTemperature + differenceSetValue) {\n        newState = (previousState == STATE_COOLING) ? STATE_COOLING : STATE_COMPRESSOR_DELAY\n    } else if (measuredTemperature <= targetTemperature - differenceSetValue) {\n        newState = STATE_HEATING\n    } else {\n        if ((previousState == STATE_COOLING || previousState == STATE_COMPRESSOR_DELAY) && measuredTemperature > targetTemperature) {\n            newState = previousState\n        } else if (previousState == STATE_HEATING && measuredTemperature < targetTemperature) {\n            newState = previousState\n        } else {\n            newState = STATE_IDLE\n        }\n    }\n}\nif (newState == STATE_UNKNOWN && coolingMsg == null && msg.cooling != null && previousState != STATE_COMPRESSOR_DELAY && msg.cooling != isCooling(previousState)) {\n    if (!msg.cooling) {\n        // Cooling should be turned on\n        newState = STATE_COMPRESSOR_DELAY\n        // We don't have a reliable compressor delay time so we need to default to full delay\n        currentCompressorDelay = compressorDelayTimeMinutes * 60000\n    } else {\n        // Cooling should be turned off\n        coolingMsg = [{ reset: true}, { payload: false, delay: 0, topic: \"cooling-controller\" }]\n    }\n}\n\nif (newState == STATE_UNKNOWN && heatingMsg == null && msg.heating != null && msg.heating != (previousState == STATE_HEATING)) {\n    if (!msg.heating) {\n        // Heating should be turned on\n        newState = STATE_HEATING\n        heatingMsg = { payload: true, topic: \"heating-controller\" }\n    } else {\n        // Heating should be turned off\n        heatingMsg = { payload: false, topic: \"heating-controller\" }\n    }    \n}\n\nif (newState != STATE_UNKNOWN && newState != previousState) {\n    if (previousState == STATE_COOLING || previousState == STATE_COMPRESSOR_DELAY) {\n        coolingMsg = [{ reset: true}, { payload: false, delay: 0, topic: \"cooling-controller\" }]\n        if (previousState == STATE_COOLING) {\n            flow.set(\"COMPRESSOR_STOPPED\", new Date().getTime())\n        }\n    } else if (previousState == STATE_HEATING) {\n        heatingMsg = { payload: false, topic: \"heating-controller\" }\n    }\n    if (newState == STATE_COMPRESSOR_DELAY) {\n        coolingMsg = [{ reset: true}, { payload: true, delay: currentCompressorDelay, topic: \"cooling-controller\" }]\n    } else if (newState == STATE_HEATING) {\n        heatingMsg = { payload: true, topic: \"heating-controller\"}\n    }\n}\n\nlet now = new Date()\nlet compressorDelayDate = new Date(new Date().getTime() + currentCompressorDelay)\nlet reportedMeasurement = measuredTemperature != null ? measuredTemperature : lastMeasurement\nlet reportedState = newState != STATE_UNKNOWN ? newState : previousState\nstatusMsg = status(\n    reportedMeasurement + \"°C (\" + targetTemperature + \")\" + stateToText(reportedState, compressorDelayDate.getTime() > now.getTime() ? compressorDelayDate : now),\n    stateToColor(reportedState),\n    stateToShape(reportedState)\n)\n\nflow.set(\"CURRENT_STATE\", reportedState)\n\nreturn [\n    compressorMsg,\n    coolingMsg,\n    heatingMsg,\n    statusMsg\n]\n\nfunction isCooling(newState) {\n    return newState == STATE_COOLING || newState == STATE_COMPRESSOR_DELAY\n}\n\nfunction error(text) {\n    return status(text, \"red\", \"dot\")\n}\n\nfunction status(text, fill, shape) {\n    return {\n        payload: { text, fill: fill, shape: shape }\n    }\n}\n\nfunction stateToText(state, compressorDelay) {\n    switch (state) {\n        case STATE_IDLE: return \" (idle)\"\n        case STATE_COMPRESSOR_DELAY: {\n            let delay = compressorDelay.toLocaleTimeString([], {\n                    hour: '2-digit',\n                    minute: '2-digit',\n                    second: '2-digit',\n                    hour12: false\n            });\n            return ` (compressor delay ${delay})`\n        }\n        case STATE_COOLING: return \" (cooling)\"\n        case STATE_HEATING: return \" (heating)\"\n        default: return \"\"\n    }\n}\n\nfunction stateToColor(state) {\n    switch (state) {\n        case STATE_IDLE: return \"grey\"\n        case STATE_COMPRESSOR_DELAY: case STATE_COOLING: return \"blue\"\n        case STATE_HEATING: return \"green\"\n        default: return \"grey\"\n    }\n}\n\nfunction stateToShape(state) {\n    switch (state) {\n        case STATE_COMPRESSOR_DELAY: return \"ring\"\n        default: return \"dot\"\n    }\n}\n\nfunction setOverrides(msg) {\n    let compressorMsg = null\n    if (msg.target != null) {\n        if (typeof msg.target == \"number\") {\n            flow.set(TARGET, msg.target)\n        } else {\n            node.warn(\"msg.target is not a number: \" + msg.target)\n        }     \n    }\n\n    if (msg.difference != null) {\n        if (typeof msg.difference == \"number\") {\n            flow.set(DIFFERENCE, msg.difference)\n        } else {\n            node.warn(\"msg.difference is not a number: \" + msg.difference)\n        }\n    }\n\n    if (msg.compressor != null) {\n        if (typeof msg.compressor == \"number\") {\n            let previousCompressorDelay = readVariable(COMPRESSOR)\n            flow.set(COMPRESSOR, msg.compressor)\n            if (previousCompressorDelay != msg.compressor) {\n                compressorMsg = { flush: true }\n            }\n        } else {\n            node.warn(\"msg.compressor is not a number: \" + msg.compressor)\n        }\n    }\n    return compressorMsg\n}\n\nfunction readVariable(name) {\n    let value = flow.get(name)\n    if (value == null) {\n        return env.get(name)\n    }\n    return value\n}\n\nfunction stateToStr(state) {\n    switch (state) {\n        case STATE_UNKNOWN: return \"UNKNOWN\"\n        case STATE_COMPRESSOR_DELAY: return \"COMPRESSOR_DELAY\"\n        case STATE_COOLING: return \"COOLING\"\n        case STATE_HEATING: return \"HEATING\"\n        case STATE_IDLE: return \"IDLE\"\n        default: return \"<???>\"\n    }\n}",
+        "outputs": 4,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\n\nif (flow.get(\"CURRENT_STATE\") == 2) {\n    flow.set(\"CURRENT_STATE\", 0)\n}\n",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 120,
+        "wires": [
+            [
+                "842ef249df079949"
+            ],
+            [
+                "842ef249df079949"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "842ef249df079949",
+        "type": "delay",
+        "z": "7b528c333c30c8a0",
+        "name": "apply compressor delay",
+        "pauseType": "delayv",
+        "timeout": "1",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "0",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": true,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 590,
+        "y": 60,
+        "wires": [
+            [
+                "e228e71c848794ee",
+                "640beebb8b61d56f"
             ]
-        },
-        {
-            "id": "842ef249df079949",
-            "type": "delay",
-            "z": "7b528c333c30c8a0",
-            "name": "apply compressor delay",
-            "pauseType": "delayv",
-            "timeout": "1",
-            "timeoutUnits": "milliseconds",
-            "rate": "1",
-            "nbRateUnits": "0",
-            "rateUnits": "second",
-            "randomFirst": "1",
-            "randomLast": "5",
-            "randomUnits": "seconds",
-            "drop": true,
-            "allowrate": false,
-            "outputs": 1,
-            "x": 590,
-            "y": 60,
-            "wires": [
-                [
-                    "e228e71c848794ee",
-                    "640beebb8b61d56f"
-                ]
-            ]
-        },
-        {
-            "id": "e228e71c848794ee",
-            "type": "function",
-            "z": "7b528c333c30c8a0",
-            "name": "set cooling state",
-            "func": "if (msg.payload == true) {\n    flow.set(\"CURRENT_STATE\", 3)\n    let lastMeasurement = flow.get(\"LAST_MEASURED_TEMPERATURE\")\n    let targetTemperature = flow.get(\"TARGET_TEMPERATURE\")\n    return {\n        payload: {\n            text: lastMeasurement + \"°C (\" + targetTemperature + \") (cooling)\",\n            fill: \"blue\",\n            shape: \"dot\"\n        }\n    }\n}\n",
-            "outputs": 1,
-            "timeout": 0,
-            "noerr": 0,
-            "initialize": "",
-            "finalize": "",
-            "libs": [],
-            "x": 820,
-            "y": 120,
-            "wires": [
-                []
-            ]
-        },
-        {
-            "id": "640beebb8b61d56f",
-            "type": "function",
-            "z": "7b528c333c30c8a0",
-            "name": "pass only payload",
-            "func": "if (msg.payload != null) {\n    delete msg.delay\n    return msg\n}",
-            "outputs": 1,
-            "timeout": 0,
-            "noerr": 0,
-            "initialize": "",
-            "finalize": "",
-            "libs": [],
-            "x": 830,
-            "y": 60,
-            "wires": [
-                []
-            ]
-        }
-    ]
+        ]
+    },
+    {
+        "id": "e228e71c848794ee",
+        "type": "function",
+        "z": "7b528c333c30c8a0",
+        "name": "set cooling state",
+        "func": "if (msg.payload == true) {\n    flow.set(\"CURRENT_STATE\", 3)\n    let lastMeasurement = flow.get(\"LAST_MEASURED_TEMPERATURE\")\n    let targetTemperature = flow.get(\"TARGET_TEMPERATURE\")\n    return {\n        payload: {\n            text: lastMeasurement + \"°C (\" + targetTemperature + \") (cooling)\",\n            fill: \"blue\",\n            shape: \"dot\"\n        }\n    }\n}\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 820,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "640beebb8b61d56f",
+        "type": "function",
+        "z": "7b528c333c30c8a0",
+        "name": "pass only payload",
+        "func": "if (msg.payload != null) {\n    delete msg.delay\n    return msg\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 830,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    }
+]
 }

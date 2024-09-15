@@ -43,7 +43,7 @@ It also shows the most recent measurement received as well as the target tempera
 ## Inputs
 Please note that any override of properties does not automatically trigger a change in cooling/heating until next measurement is sent.
 
-### payload
+### payload (`number`)
 Give temperature measurements in the payload as a number.
 
 ### target (`number`)
